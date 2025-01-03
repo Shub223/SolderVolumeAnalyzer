@@ -4,19 +4,21 @@ A desktop application for analyzing solder paste volumes from Gerber files. This
 
 ## Features
 
-### Version 1.0
-- Load and parse Gerber files (solder paste layers)
-- Calculate solder volumes based on pad geometry
-- Interactive 2D visualization with:
+### Version 1.2 (Current)
+- Interactive PCB view with:
+  - Smooth zoom to cursor
+  - Pan with left mouse button
   - Color-coded pads based on volume
-  - Zoom controls (Zoom In, Zoom Out, Fit View)
   - Grid overlay for measurements
+  - Colorbar showing volume scale
 - Detailed pad information table showing:
   - Pad ID
   - Shape type
+  - Length and width
   - Area
   - Thickness
   - Volume
+- Load and parse Gerber files (solder paste layers)
 - Status bar displaying:
   - Current file name
   - Total pad count
@@ -30,7 +32,7 @@ A desktop application for analyzing solder paste volumes from Gerber files. This
 
 1. Clone this repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Shub223/SolderVolumeAnalyzer.git
 cd GerberSolderVolumeAnalyzer
 ```
 
@@ -53,8 +55,11 @@ python run.py
 ```
 
 2. Use the "Load Gerber File" button to open a Gerber file
-3. View pad information in the table
-4. Use zoom controls to navigate the PCB view
+3. Navigate the PCB view:
+   - Zoom: Use mouse wheel
+   - Pan: Click and drag with left mouse button
+   - Reset view: Click "Fit View"
+4. View pad information in the table
 5. Export data using the "Export Data" button
 
 ## Requirements
@@ -82,16 +87,27 @@ GerberSolderVolumeAnalyzer/
 │   │   ├── main_window.py    # Main application window
 │   │   ├── pcb_view.py       # PCB visualization
 │   │   └── volume_table.py   # Volume data table
-│   ├── gerber_parser.py      # Gerber file parser
-│   └── main.py              # Application entry point
-├── run.py                   # Startup script
-├── requirements.txt         # Python dependencies
-└── README.md               # This file
+│   └── gerber_parser.py      # Gerber file parser
+├── run.py                    # Application entry point
+├── requirements.txt          # Python dependencies
+└── README.md                # This file
 ```
 
 ## Version History
 
-### v1.0 (Current)
+### v1.2
+- Improved PCB viewer with smooth zoom and pan
+- Enhanced window layout and centering
+- Fixed colorbar positioning
+- Added pad length and width measurements
+- Code cleanup and organization
+
+### v1.1
+- Added pad measurements (length and width)
+- Improved table display with new measurements
+- Enhanced code organization
+
+### v1.0
 - Initial release with basic functionality
 - Gerber file parsing
 - Volume calculation
