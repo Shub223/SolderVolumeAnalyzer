@@ -18,6 +18,19 @@ class PadInfo:
     area: float
     volume: float
     thickness: float = 0.15  # default 150 microns
+    length: float = 0.0      # longest dimension
+    width: float = 0.0       # shortest dimension
+    
+    def calculate_dimensions(self):
+        """Calculate pad dimensions based on geometry"""
+        if self.shape_type == 'circle':
+            # For circles, length and width are the diameter
+            self.length = self.width = 2 * self.geometry.buffer(0).boundary.distance(self.geometry.centroid)
+        else:
+            # For rectangles and polygons, calculate using bounds
+            minx, miny, maxx, maxy = self.geometry.bounds
+            self.length = max(maxx - minx, maxy - miny)
+            self.width = min(maxx - minx, maxy - miny)
 
 class GerberParser:
     def __init__(self):
@@ -166,6 +179,7 @@ class GerberParser:
                 area=area,
                 volume=volume
             )
+            pad.calculate_dimensions()
             self.pads.append(pad)
             logging.info(f"Created circular pad {self._pad_counter} at ({self._current_x}, {self._current_y})")
 
@@ -192,6 +206,7 @@ class GerberParser:
                 area=area,
                 volume=volume
             )
+            pad.calculate_dimensions()
             self.pads.append(pad)
             logging.info(f"Created rectangular pad {self._pad_counter} at ({self._current_x}, {self._current_y})")
         else:

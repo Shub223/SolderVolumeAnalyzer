@@ -13,7 +13,7 @@ class VolumeTable(QTableWidget):
     def _setup_table(self):
         """Setup the table structure"""
         # Set columns
-        columns = ['Pad ID', 'Type', 'Area (mm²)', 'Thickness (µm)', 'Volume (mm³)']
+        columns = ['Pad ID', 'Type', 'Length (mm)', 'Width (mm)', 'Area (mm²)', 'Thickness (µm)', 'Volume (mm³)']
         self.setColumnCount(len(columns))
         self.setHorizontalHeaderLabels(columns)
         
@@ -38,9 +38,11 @@ class VolumeTable(QTableWidget):
             # Add items
             self.setItem(row, 0, QTableWidgetItem(str(pad.id)))
             self.setItem(row, 1, QTableWidgetItem(pad.shape_type))
-            self.setItem(row, 2, QTableWidgetItem(f"{pad.area:.2f}"))
-            self.setItem(row, 3, QTableWidgetItem(f"{pad.thickness*1000:.0f}"))
-            self.setItem(row, 4, QTableWidgetItem(f"{pad.volume:.2f}"))
+            self.setItem(row, 2, QTableWidgetItem(f"{pad.length:.3f}"))
+            self.setItem(row, 3, QTableWidgetItem(f"{pad.width:.3f}"))
+            self.setItem(row, 4, QTableWidgetItem(f"{pad.area:.3f}"))
+            self.setItem(row, 5, QTableWidgetItem(f"{pad.thickness*1000:.0f}"))
+            self.setItem(row, 6, QTableWidgetItem(f"{pad.volume:.3f}"))
             
             # Set alignment
             for col in range(self.columnCount()):
