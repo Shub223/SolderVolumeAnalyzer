@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                             QPushButton, QFileDialog, QLabel, QTableWidget, QMessageBox,
-                            QStatusBar)
+                            QStatusBar, QSplitter)
 from PyQt6.QtCore import Qt
 from src.gui.pcb_view import PCBView
 from src.gui.volume_table import VolumeTable
@@ -20,19 +20,38 @@ class MainWindow(QMainWindow):
         # Create main widget and layout
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
-        layout = QVBoxLayout(main_widget)
+        main_layout = QVBoxLayout(main_widget)
+        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setSpacing(10)
+        
+        # Create splitter for PCB view and table
+        splitter = QSplitter(Qt.Orientation.Vertical)
+        main_layout.addWidget(splitter)
+        
+        # Create PCB view container with fixed aspect ratio
+        pcb_container = QWidget()
+        pcb_layout = QVBoxLayout(pcb_container)
+        pcb_layout.setContentsMargins(0, 0, 0, 0)
+        pcb_layout.setSpacing(0)
         
         # Create PCB view
         self.pcb_view = PCBView()
-        layout.addWidget(self.pcb_view)
+        pcb_layout.addWidget(self.pcb_view)
         
         # Create volume table
         self.volume_table = VolumeTable()
-        layout.addWidget(self.volume_table)
+        
+        # Add widgets to splitter
+        splitter.addWidget(pcb_container)
+        splitter.addWidget(self.volume_table)
+        
+        # Set initial splitter sizes (70% PCB view, 30% table)
+        splitter.setSizes([700, 300])
         
         # Create button layout
         button_layout = QHBoxLayout()
-        layout.addLayout(button_layout)
+        button_layout.setSpacing(10)
+        main_layout.addLayout(button_layout)
         
         # Add load button
         load_button = QPushButton("Load Gerber File")
@@ -46,6 +65,7 @@ class MainWindow(QMainWindow):
         
         # Add zoom controls
         zoom_layout = QHBoxLayout()
+        zoom_layout.setSpacing(5)
         zoom_in_button = QPushButton("Zoom In")
         zoom_out_button = QPushButton("Zoom Out")
         zoom_fit_button = QPushButton("Fit View")
@@ -57,12 +77,17 @@ class MainWindow(QMainWindow):
         zoom_layout.addWidget(zoom_fit_button)
         button_layout.addLayout(zoom_layout)
         
+        # Add spacer to push buttons to the left
+        button_layout.addStretch()
+        
         # Add status bar
         self.statusBar = QStatusBar()
         self.setStatusBar(self.statusBar)
         
-        # Set window size
-        self.resize(1000, 800)
+        # Set window size and center it
+        self.resize(1200, 800)
+        self.setMinimumSize(800, 600)
+        self._center_window()
         
         # Initialize status
         self._update_status()
@@ -130,3 +155,12 @@ class MainWindow(QMainWindow):
         file_name = os.path.basename(self.current_file) if self.current_file else "No file"
         status_msg = f"File: {file_name} | Pads: {len(pads)} | Total Volume: {total_volume:.2f} mm³"
         self.statusBar.showMessage(status_msg)
+
+    def _center_window(self):
+        """Center the window on the screen"""
+        frame_geometry = self.frameGeometry()
+        screen = self.screen()
+        if screen:
+            center_point = screen.availableGeometry().center()
+            frame_geometry.moveCenter(center_point)
+            self.move(frame_geometry.topLeft())
