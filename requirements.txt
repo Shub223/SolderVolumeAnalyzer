@@ -1,3 +1,5 @@
+moderngl>=5.8.2
+moderngl-window>=2.4.4
 pygerber>=3.0.0a4
 matplotlib>=3.7.1
 shapely>=2.0.1
